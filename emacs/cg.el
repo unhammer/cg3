@@ -594,7 +594,36 @@ select the whole string \"SELECT:1022:rulename\")."
 
 
 
-;;; "Flycheck" ----------------------------------------------------------------
+;;; Flycheck ----------------------------------------------------------------
+
+(flycheck-define-checker vislcg3
+  "Check using vislcg3."
+  ;; TODO: How do I use the cg-command variable in the macro?
+  :command ("vislcg3" "--grammar-only" "--grammar" source)
+  ;; TODO: concat the two messages? How can I get line number out of there?
+  :error-patterns ((warning line-start (file-name) ": Warning: " (message) ": Lines " line (one-or-more not-newline) line-end)
+                   (warning line-start (file-name) ": Warning: " (message) "on line " line (one-or-more not-newline) line-end)
+                   (error line-start (file-name) ": Error: " (message) "on line " line (one-or-more not-newline) line-end))
+  :modes cg-mode)
+
+;; apertium-nob.nob.rlx: Warning: LIST verb was defined twice with the same contents: Lines 29 and 957.
+;; apertium-nob.nob.rlx: Warning: Inline templates do not need () around the whole expression on line 3137 at ( # høgrekontekstar for «hvor» som gjer det til konkret stad:
+(defun cg-flycheck-setup ()
+  "Set up flycheck checker using vislcg3."
+  (flycheck-define-checker vislcg3
+    "Check using vislcg3."
+    ;; TODO: How do I use the cg-command variable in the macro?
+    :command ("vislcg3" "--grammar-only" "--grammar" source)
+    :error-patterns ((warning line-start (file-name) ": Warning: " (message) ": Lines " line (one-or-more not-newline) line-end)
+                     (warning line-start (file-name) ": Warning: " (message) "on line " line (one-or-more not-newline) line-end)
+                     (error line-start (file-name) ": Error: " (message) "on line " line (one-or-more not-newline) line-end))
+    :modes cg-mode)
+
+  (add-to-list 'flycheck-checkers 'vislcg3))
+
+
+
+;;; "IDE" ----------------------------------------------------------------
 (require 'compile)
 
 (defvar cg--file nil
