@@ -1158,6 +1158,29 @@ buffer to cg-output-buffer on check."
       (concat "*CG output for " (file-name-base cg--file) "*")
     (error "Unexpected mode %S" mode)))
 
+(defun cg-output-hl-dep ()              ; TODO!
+  "Highlight the immediate dependency relations of reading at point of the output buffer."
+  (with-current-buffer (cg-output-buffer))
+  (when (looking-at "^	.* #\\([0-9]+\\)->\\([0-9]+\\)")
+    (message "%s→%s" (match-string-no-properties 1) (match-string-no-properties 2))
+    )
+  ;; (let* ((sym (symbol-at-point))
+  ;;        (sym-re (concat "\\(?:^\\|[ \"(:]\\)\\("
+  ;;       		 (regexp-quote (symbol-name sym))
+  ;;       		 "\\)\\(?:[:)\" ]\\|$\\)")))
+  ;;   ;; TODO: make regexp-opts of the LIST definitions and search
+  ;;   ;; those as well?
+  ;;   (with-current-buffer (cg-output-buffer)
+  ;;     (when (and sym
+  ;;       	 (get-buffer-window)
+  ;;       	 (not (cg-output-running)))
+  ;;       (remove-overlays (point-min) (point-max) 'face cg-output-highlight-face)
+  ;;       (goto-char (point-min))
+  ;;       (while (re-search-forward sym-re nil 'noerror)
+  ;;         (overlay-put (make-overlay (match-beginning 1) (match-end 1))
+  ;;       	       'face cg-output-highlight-face)))))
+  )
+
 (defun cg-output-buffer ()
   "Get or make the output buffer for this grammar file."
   (let ((cg--file (if (eq major-mode 'cg-mode)
